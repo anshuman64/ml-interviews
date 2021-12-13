@@ -9,9 +9,6 @@ Space: O(N)
 def reverse(arr : list) -> list:
     for i in range(len(arr)/2):
         other_idx = len(arr) - i - 1
-        temp = arr[i]
-
-        arr[i] = arr[other_idx]
-        arr[other_idx] = temp 
+        arr[i], arr[other_idx] = arr[other_idx], arr[i]
 
     return arr

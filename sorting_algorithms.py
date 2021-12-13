@@ -8,9 +8,7 @@ def bubbleSort(arr):
     for i in range(1, len(arr)):
         # Swap values if previous is larger than current
         if arr[i-1] > arr[i]:
-            temp = arr[i-1]
-            arr[i-1] = arr[i]
-            arr[i] = temp
+            arr[i-1], arr[i] = arr[i], arr[i-1]
 
             did_swap = True
     
@@ -33,9 +31,8 @@ def selectionSort(arr):
                 smallest_idx = j
         
         # Swap with current index
-        temp = arr[swap_idx]
-        arr[swap_idx] = arr[smallest_idx]
-        arr[smallest_idx] = temp
+        arr[swap_idx], arr[smallest_idx] = arr[smallest_idx], arr[swap_idx]
+
 
 ################
 ## Insertion Sort
@@ -56,13 +53,6 @@ def insertionSort(arr):
             else:
                 arr[j+1] = swap_value 
                 break
-
-
-################
-## QuickSort
-################
-
-# def quickSort(arr):
 
 
 ################
@@ -106,8 +96,34 @@ def mergeSortHelper(arr, left_arr, right_arr):
         arr[a] = right_arr[r]
         r += 1
         a += 1
-    
 
+
+################
+## QuickSort
+################
+
+def quickSort(arr):
+    quickSortHelper(arr, 0, len(arr)-1)
+
+def quickSortHelper(arr, start_idx, end_idx):
+    if start_idx > end_idx:
+        return
+    
+    # Partition
+    pivot_idx = start_idx
+    for i in range(start_idx+1, end_idx+1):
+        if arr[i] < arr[pivot_idx]:
+            # Increase pivot position
+            pivot_idx += 1
+            # Swap with smaller value
+            arr[i], arr[pivot_idx] = arr[pivot_idx], arr[i]
+
+    # Swap new pivot position with initial pivot
+    arr[start_idx], arr[pivot_idx] = arr[pivot_idx], arr[start_idx]
+
+    quickSortHelper(arr, start_idx, pivot_idx-1)
+    quickSortHelper(arr, pivot_idx+1, end_idx)
+    
 
 ################
 ## Binary Search
@@ -145,9 +161,12 @@ def binarySearchHelper(arr, value, low, high):
         return True
 
 
+################
+## Testing
+################
             
-
 arr = [1, 9, 3, 3, 2, 8, 6]
+# arr = [3,1,4,2,5]
 bubbleSort(arr)
 print(arr)
 selectionSort(arr)
@@ -155,6 +174,8 @@ print(arr)
 insertionSort(arr)
 print(arr)
 mergeSort(arr)
+print(arr)
+quickSort(arr)
 print(arr)
 
 # arr = [1, 2, 3, 3, 6, 8, 9]
