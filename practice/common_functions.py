@@ -104,3 +104,40 @@ def powersOf2(n : int) -> int:
         curr = prev * 2
         print(curr)
         return curr
+
+"""
+Tags: STUDYGUIDE
+Ex: 7
+Source: CTCI pg 134
+Description: Fibonacci with bottom up memoization 
+Time:  O(n)
+Space: -
+"""
+def fib(n);
+    if (n == 0):
+        return 0
+    elif (n == 1):
+        return 1
+
+    memo = [0] * n
+    memo[0] = 0
+    memo[1] = 1
+
+    for i in range(2, n):
+        memo[i] = memo[i-1] + memo[i-2]
+
+    return memo[n-1] + memo[n-2]
+
+def fib(n):
+    if (n == 0):
+        return 0
+
+    a = 0
+    b = 1
+
+    for i in range(2, n):
+        c = a + b
+        a = b
+        b = c
+
+    return a + b
