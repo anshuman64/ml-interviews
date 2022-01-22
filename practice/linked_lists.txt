@@ -1,2 +1,326 @@
+""" *Ex: 9
 
+    Source: CTCI pg 95
 
+    Description: Given a circular linked list, return the node at the beginning of the loop
+
+    Approach:
+    - 
+
+""" Ex: 8
+
+    Source: CTCI pg 95
+
+    Description: Find node where two linked lists intersect (same node in memory)
+
+    Edge Cases:
+    - They don't intersect
+
+    First Approach:
+    - Throw all nodes in hashset and see if they are in 
+
+    Approach:
+    - Find length of both lists
+    - Skip the first X nodes in the larger list
+    - Iterate through both lists and determine if node is ever the same
+
+""" Ex: 7
+    Source: CTCI pg 95
+
+    Description: Given two lists of number digits in reverse order, sum lists
+
+    Example:
+    - [7,1,5] + [5,9,2] = [2,1,9]
+
+    Approach:
+    - Single pointer each list
+    - Add numbers, % 10, keep track of carry
+
+    Complexity:
+    - Time: O(n+m)
+    - Space: O(n+m)
+    """
+
+    def sum_lists(list1_head, list2_head):
+    if list1_head is None and list2_head is None:
+        return None
+    elif list1_head is None:
+        return list2_head
+    elif list2_head is None:
+        return list1_head
+
+    pointer1 = list1_head
+    pointer2 = list2_head
+
+    current_sum = pointer1.value + pointer2.value
+    is_carry = current_sum >= 10
+
+    head = linked_list.SingleNode(current_sum % 10)
+    current_node = head
+
+    pointer1 = pointer1.next
+    pointer2 = pointer2.next
+
+    while pointer1 is not None or pointer2 is not None:
+        current_sum = (1 if is_carry else 0)
+        current_sum += pointer1.value if pointer1 is not None else 0
+        current_sum += pointer2.value if pointer2 is not None else 0
+
+        is_carry = current_sum >= 10
+        current_node.next = linked_list.SingleNode(current_sum % 10)
+
+        if pointer1 is not None:
+            pointer1 = pointer1.next
+        if pointer2 is not None:
+            pointer2 = pointer2.next
+
+        current_node = current_node.next
+
+    return head
+
+""" Ex: 6
+
+    Description: Reverse a linked list
+
+    Approach:
+    - Three pointers
+
+    Complexity:
+    - Time: O(n)
+    - Space: O(1)
+    """
+    
+    def reverse_linked_list(head_node):
+        if head_node or head_node.next is None:
+            return
+        
+        previous_node = None
+        current_node = head_node
+
+        while current_node is not None:
+            next_node = current_node.next
+
+            current_node.next = previous_node 
+
+            previous_node = current_node
+            current_node = next_node 
+
+""" Ex: 5
+
+    Source: CTCI pg 94
+
+    Description: Given a pivot, move all nodes less than pivot to the left of all nodes >= pivot
+
+    Example:
+           v        v
+    - [3,2,8,5,10,5,1], 5 -> [3,1,2,10,5,5,8]
+
+    Questions:
+    - empty? 
+    - numeric? 
+    - auxiliary space?
+    
+    Approaches:
+    - Put into array (O(n)), sort O(logn)
+    - Count all values less than pivot; two pointers copy & replace
+
+    Complexity:
+    - Time: O(n)
+    - Space: 0
+    """
+
+    def smaller_than_pivot(head_node, pivot):
+        if head_node is None or head_node.next is None:
+            return
+        
+        current_node = head
+        while current_node.value < pivot:
+            current_node = current_node.next
+
+        runner_node = current_node.next
+
+        while runner_node is not None:
+            if runner_node.value < pivot:
+                current_node.value, runner_node.value = runner_node.value, current_node.value 
+                current_node = current_node.next
+            
+            runner_node = runner_node.next
+
+""" Ex: 4
+    Source: CTCI pg 94
+
+    Description: Delete a node given access to only that node (not head)
+
+    Edge Cases:
+    - empty list?
+    - singly linked?
+    - end node?
+
+    Approach:
+    - Copy next value to current node
+    - Delete next node 
+
+    Complexity:
+    - Time: O(1)
+    - Space: O(1)
+    """
+
+    def delete_node(current_node):
+        if current_node is None or current_node.next is None:
+            return 
+
+        current_node.value = current_node.next.value 
+        current_node.next = current_node.next.next
+
+""" Ex: 3
+    REMEMBER:
+    - Two pointers space apart
+
+    Source: CTCI pg 94
+    
+    Description: Find kth to last element of linked list 
+
+    Edge Cases:
+    - k out of bounds
+    - empty list 
+    - negative k? 
+
+    Example:
+    - [1,2,3,4], k=1 -> 4
+
+    Approach:
+    - Get length of linked list
+    - In second loop, only go len(l) - 1 - k forward
+
+    Complexity:
+    - Time: O(n)
+    - Space: O(n)
+    """
+
+    def get_kth_last(head_node, k):
+        if head_node is None: 
+            print("List empty!")
+            return
+
+        N = 0
+        current_node = head_node
+        while current_node is not None:
+            N += 1
+            current_node = current_node.next
+
+        if N < k:
+            print("k too large!")
+            return
+
+        current_node = head_node
+        for _ in range(N - k):
+            current_node = current_node.next
+
+        return current_node.value
+
+    def get_kth_last(head_node, k):
+        if head_node is None:
+            print("List empty!")
+            return
+
+        current_node = head
+        runner_node = head
+
+        for _ in range(k):
+            if runner_node is None:
+                print("k too large!")
+                return
+            
+            runner_node = runner_node.next 
+
+        while runner_node is not None:
+            current_node = current_node.next
+            runner_node = runner_node.next
+
+        return current_node.value
+
+""" Ex: 2
+    REMEMBER:
+        - runner_node.next if only didn't remove node 
+
+    Source: CTCI pg 95
+
+    Description: Remove duplicates from an unsorted linked list (with & without auxiliary space)
+
+    Edge Cases:
+    - singly linked?
+    - head node only?
+    - empty list
+    - non alpha numeric characters 
+
+    With - Hashset of values O(n)
+    Without auxiliary - two pointers O(n^2)
+
+    Example: 
+    - [] -> []
+    - [1,2,1,3,4] -> [1,2,3,4]
+    - [1] -> [1]
+
+    Complexity:
+    - Time: O(n^2)
+    - Space: O(n)
+    """
+
+    def remove_duplicates(head_node):
+        if head_node is None:
+            return
+
+        current_node = head_node
+        while current_node.next is not None:
+            runner_node = current_node
+
+            while runner_node.next is not None:
+                if current_node.value == runner_node.next.value:
+                    runner_node.next = runner_node.next.next
+                else:
+                    runner_node = runner_node.next
+
+            current_node = current_node.next
+
+""" Ex: 1
+    Source: TBP Mock Interview (Caroline); CTCI pg 95
+
+    Description: Given the head of a singly linked list, return true if it is a palindrome.
+
+    Example 1:
+    Input: head = [1, 2, 2, 1]
+    Output: true
+
+    Example 2:
+    Input: head = [1, 2]
+    Output: false
+
+    Constraints:
+    - The number of nodes in the list is in the range[1, 105].
+    - 0 <= Node.val <= 9
+
+    Complexity:
+    - Time: O(n)
+    - Aux Space: O(n)
+
+    Alternate Approaches:
+    - Find length, iterate first half & add to stack, iterate second half and pop from stack
+    - Create second linked list as reverse and compare halves
+    """
+
+    class Solution:
+        def isPalindrome(self, head: Optional[ListNode]) -> bool:  # [1,2,3,2,1]
+            l = []
+
+            node = head
+            while node is not None:
+                l.append(node.val)
+                node = node.next
+                # l = [1,2,3,2,1]
+            for i in range(len(l)//2):
+                if l[i] != l[len(l)-1-i]:
+                    return False
+
+            return True
+
+        

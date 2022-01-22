@@ -1,4 +1,160 @@
+"""Ex: 14
+    Source: TBP Mock Interview (Caroline)
 
+    Description: Given a string s, find the first non-repeating character in it and return its index. If it does not exist, return -1.
+
+    Example 1:
+    Input: s = "leetcode"
+    Output: 0
+    
+    Example 2:
+    Input: s = "loveleetcode"
+    Output: 2
+    
+    Example 3:
+    Input: s = "aabb"
+    Output: -1
+    
+    Constraints:
+    - 1 <= s.length <= 105
+    - s consists of only lowercase English letters.
+    """
+
+    class Solution:
+        def firstUniqChar(self, s: str) -> int:
+            # Handle empty case
+            if len(s) < 1:
+            return -1
+            
+            # Initialize two maps
+            m = {} # Holds count of chars {a: 2, b: 2}
+            idx_m = {} # Holds idx of chars {a: 0, b: 2}
+            
+            # Loop through string
+            for i, c in enumerate(s): # O(n)
+            # If the char not in  map
+            if c not in m: # O(1)
+                # Add its count + lowest idx
+                m[c] = 1
+                idx_m[c] = i
+            else:
+                # Increase count
+                m[c] += 1
+                
+            # Create a list of non_repeated
+            non_repeated = []
+            for c in m: # O(n)
+            if m[c] < 2:
+                # Add chars that are not repeated
+                non_repeated.append(c)
+                
+            # If there were no non_repeated chars
+            if len(non_repeated) == 0:
+            # Return -1
+            return -1
+            else:
+            # Find the lowest idx 
+            lowest_idx = len(s)
+                for c in non_repeated: # O(n)
+                if idx_m[c] < lowest_idx:
+                lowest_idx = idx_m[c]
+            
+            return s[lowest_idx]
+
+""" Ex: 13
+    Source: HKN Interview Problem #2
+
+    Description:
+        Sometimes the path isn’t the most simple for instance: 
+        If we are at directory: root/dirA/dirB and we run cd ../dirC///../.. That is the same at running cd ../..
+
+        Assuming a path is valid, write it in the most simplified form
+        Clarification:
+        -no need to consider root directory for this
+        -Assume for the sake of this question no two directories are named the same, for instance you won’t have a path dirA/dirB/dirA
+
+    Scenarios:
+    - .. after folderName: pop
+    - .. not after folderName: push
+    - folderName: push
+    """
+
+    def simplified_path(path):
+        path += '/'
+        stack = []
+        cur_folder_name = ''
+
+        for i in range(len(path)):
+            if path[i] != '.' and path[i] != '/':
+                # If alphanumeric, add to cur_folder_name
+                cur_folder_name += path[i]
+            
+            elif path[i] == '/':
+                # If last element was a folder, add to stack
+                if len(cur_folder_name) > 0:
+                    stack.append(cur_folder_name)
+                    cur_folder_name = ''
+                
+                # Else if last element was '../'
+                elif i > 1 and path[i-2:i] == '..':
+                    # The stack is empty or has two dots
+                    if len(stack) == 0 or stack[len(stack)-1] == "../":
+                        # Add to the stack
+                        stack.append('../')
+                    # If stack has a folder
+                    else:
+                        stack.pop()
+        
+        return stack
+            
+
+    print(simplified_path('../'))
+    print(simplified_path('../dirC//'))
+    print(simplified_path('../dirC///../..'))
+
+""" Ex: 12
+    Source: HKN Interview Problem #1
+
+    Description:
+        For the command “cd”:
+        -".." means to go up a directory, . means the current directory, / means to get the subdirectory
+        -For a valid path there can't be more than two .. before a /, and any number of /'s has the same function as one
+        for instance ./././folderA, ../../folderB, folderB/../.././////folderA,  is valid
+        -All paths we give would start with a . or a folder name
+        -all folder names are good: ie it would not have punctuation (/ . , etc)
+
+        Write a function to check if a path is valid
+
+    Cases:
+        - ./././folderA
+        - ../../folderB
+        - folderB/../.././////folderA
+        - (false) .../
+        - (false) /...
+        - (false) /__
+    """
+
+    def is_path_valid(path):
+        cur_num_dots = 0
+        
+        for i in range(len(path)):
+            if path[i] == '.':
+                cur_num_dots += 1
+
+                if cur_num_dots > 2:
+                    return False
+            else:
+                cur_num_dots = 0
+
+        return True
+
+    assert is_path_valid('./././folderA')
+    assert is_path_valid('../../folderB')
+    assert is_path_valid('folderB/../.././////folderA')
+    assert not is_path_valid('.../')
+    assert not is_path_valid('/...')
+
+    print("All test cases passed.")
 
 """ Ex: 11
     REMEMBER:

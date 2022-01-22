@@ -1,7 +1,8 @@
-class SingleNode: 
+class SingleNode:
     def __init__(self, value):
         self.value = value
         self.next = None
+
 
 class SingleLinkedList:
     def __init__(self):
@@ -16,16 +17,16 @@ class SingleLinkedList:
 
         current_node = self.head
         for i in range(index):
-            current_node = current_node.next 
-        
+            current_node = current_node.next
+
         return current_node.value
 
     def __repr__(self):
         if self.head is None:
             return '[]'
-        
+
         return_string = '[' + str(self.head.value)
-        current_node = self.head 
+        current_node = self.head
 
         while(current_node.next is not None):
             return_string += ', '
@@ -37,14 +38,14 @@ class SingleLinkedList:
     def get_idx(self, value):
         assert self.length > 0, "No elements in list"
 
-        current_node = self.head 
+        current_node = self.head
         idx = 0
 
         while (current_node is not None):
             if current_node.value == value:
                 return idx
             else:
-                current_node = current_node.next 
+                current_node = current_node.next
                 idx += 1
 
         return -1
@@ -52,14 +53,14 @@ class SingleLinkedList:
     def insertAt(self, value, index):
         assert index <= self.length, "Index out of bounds"
         new_node = SingleNode(value)
-        
+
         if (self.head is None):
             self.head = new_node
         elif (index == 0):
-            new_node.next = self.head 
+            new_node.next = self.head
             self.head = new_node
         else:
-            current_node = self.head 
+            current_node = self.head
 
             # Go to node before new node
             for i in range(index-1):
@@ -69,7 +70,7 @@ class SingleLinkedList:
             current_node.next = new_node
 
         self.length += 1
-            
+
     def insert(self, value):
         self.insertAt(value, 0)
 
@@ -77,16 +78,16 @@ class SingleLinkedList:
         assert index < self.length, "Index out of bounds"
 
         if (index == 0):
-            self.head = self.head.next 
+            self.head = self.head.next
         else:
-            current_node = self.head 
+            current_node = self.head
 
             # Go to node before node-to-delete
             for i in range(index-1):
                 current_node = current_node.next
 
             current_node.next = current_node.next.next
-        
+
         self.length -= 1
 
     def delete(self, value):
@@ -145,6 +146,33 @@ def test_linkedlist():
     assert str(l) == '[3]'
     l.delete(3)
     assert str(l) == '[]'
+
+
+def construct_linked_list(arr):
+    if len(arr) == 0:
+        return None
+
+    head = SingleNode(arr[0])
+
+    if len(arr) == 1:
+        return head
+
+    current_node = head
+    for i in range(1, len(arr)):
+        current_node.next = SingleNode(arr[i])
+        current_node = current_node.next
+
+    return head
+
+
+def print_linked_list(head_node):
+    current_node = head_node
+
+    while current_node is not None:
+        print(current_node.value)
+
+        current_node = current_node.next
+
 
 if __name__ == '__main__':
     test_linkedlist()
