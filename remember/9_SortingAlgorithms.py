@@ -1,24 +1,24 @@
 ################
-## Bubble Sort
+# Bubble Sort
 ################
 
 def bubbleSort(arr):
     did_swap = False
-    
+
     for i in range(1, len(arr)):
         # Swap values if previous is larger than current
         if arr[i-1] > arr[i]:
             arr[i-1], arr[i] = arr[i], arr[i-1]
 
             did_swap = True
-    
+
     # Re-run if swapped once
     if did_swap:
         bubbleSort(arr)
 
 
 ################
-## Selection Sort
+# Selection Sort
 ################
 
 def selectionSort(arr):
@@ -29,13 +29,13 @@ def selectionSort(arr):
         for j in range(swap_idx+1, len(arr)):
             if arr[j] < arr[smallest_idx]:
                 smallest_idx = j
-        
+
         # Swap with current index
         arr[swap_idx], arr[smallest_idx] = arr[smallest_idx], arr[swap_idx]
 
 
 ################
-## Insertion Sort
+# Insertion Sort
 ################
 
 def insertionSort(arr):
@@ -48,29 +48,30 @@ def insertionSort(arr):
             # Push up values bigger than swap_value
             if arr[j] > swap_value:
                 arr[j+1] = arr[j]
-            
+
             # Place swap value in correct spot
             else:
-                arr[j+1] = swap_value 
+                arr[j+1] = swap_value
                 break
 
 
 ################
-## MergeSort
+# MergeSort
 ################
 
 def mergeSort(arr):
     if len(arr) == 1:
         return arr
-    
+
     # Split array in half
     mid_idx = len(arr)//2
-    left_arr  = arr[:mid_idx]
+    left_arr = arr[:mid_idx]
     right_arr = arr[mid_idx:]
 
     mergeSort(left_arr)
     mergeSort(right_arr)
     mergeSortHelper(arr, left_arr, right_arr)
+
 
 def mergeSortHelper(arr, left_arr, right_arr):
     l = r = a = 0
@@ -83,7 +84,7 @@ def mergeSortHelper(arr, left_arr, right_arr):
         else:
             arr[a] = right_arr[r]
             r += 1
-        
+
         a += 1
 
     # Handle remaining values
@@ -99,19 +100,20 @@ def mergeSortHelper(arr, left_arr, right_arr):
 
 
 ################
-## QuickSort
+# QuickSort
 ################
 
 def quickSort(arr):
-    quickSortHelper(arr, 0, len(arr)-1)
+    quickSortHelper(arr, 0, len(arr))
+
 
 def quickSortHelper(arr, start_idx, end_idx):
-    if start_idx > end_idx:
+    if start_idx >= end_idx:
         return
-    
+
     # Partition
     pivot_idx = start_idx
-    for i in range(start_idx+1, end_idx+1):
+    for i in range(start_idx+1, end_idx):
         if arr[i] < arr[pivot_idx]:
             # Increase pivot position
             pivot_idx += 1
@@ -123,10 +125,10 @@ def quickSortHelper(arr, start_idx, end_idx):
 
     quickSortHelper(arr, start_idx, pivot_idx-1)
     quickSortHelper(arr, pivot_idx+1, end_idx)
-    
+
 
 ################
-## Binary Search
+# Binary Search
 ################
 
 def binarySearch(arr, value):
@@ -146,13 +148,15 @@ def binarySearch(arr, value):
 
     return False
 
+
 def binarySearchRecursive(arr, value):
     return binarySearchHelper(arr, value, 0, len(arr)-1)
+
 
 def binarySearchHelper(arr, value, low, high):
     if (low > high):
         return False
-    
+
     mid = low + (high - low) // 2
     if (arr[mid] < value):
         return binarySearchHelper(arr, value, mid+1, high)
@@ -163,9 +167,9 @@ def binarySearchHelper(arr, value, low, high):
 
 
 ################
-## Testing
+# Testing
 ################
-            
+
 arr = [1, 9, 3, 3, 2, 8, 6]
 # arr = [3,1,4,2,5]
 bubbleSort(arr)

@@ -6,7 +6,7 @@ class MaxHeap:
         heap[count]   = bottom-most, left-most empty spot
         heap[2i+1]    = node.left
         heap[2i+2]    = node.right
-        heap[(i-1)/2] = node.parent
+        heap[(i-1)//2] = node.parent
         """
         self.heap = [None] * max_size
         self.count = 0
@@ -65,6 +65,7 @@ class MaxHeap:
 
             return return_value
 
+
 def test_heap():
     m = MaxHeap(10)
     m.push(5)
@@ -90,6 +91,7 @@ def test_heap():
     assert m.pop() == 8
     assert m.pop() == 5
     assert m.pop() == 3
+
 
 if __name__ == '__main__':
     test_heap()

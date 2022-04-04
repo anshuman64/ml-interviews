@@ -1,0 +1,131 @@
+
+""" Ex: 3
+    REMEMBER:
+    - Check key logic
+
+    Source: CTCI pg 99
+
+    Description: Create SortedStack class, where min is on top
+
+    """
+
+    class SortedStack:
+        def __init__(self):
+            self.stack = []
+            self.temp_stack = []
+
+        def __repr__(self):
+            return str(self.stack)
+
+        def push(self, value):
+            while len(self.stack) > 0:
+                if value <= self.stack[len(self.stack)-1]:
+                    break
+
+                self.temp_stack.append(self.stack.pop())
+
+            self.temp_stack.append(value)
+
+            for _ in range(len(self.temp_stack)):
+                self.stack.append(self.temp_stack.pop())
+
+        def pop(self):
+            if len(self.stack) == 0:
+                print("No elements in stack!")
+                return
+
+            return self.stack.pop()
+
+        def peek(self):
+            if len(self.stack) == 0:
+                print("No elements in stack!")
+                return
+
+            return self.stack[len(self.stack) - 1]
+
+        def isEmpty(self):
+            return len(self.stack) == 0
+
+""" Ex: 2
+
+    Source: CTCI pg 99
+
+    Description: Implement Queue with two stacks
+
+    Questions:
+    - What functions?
+    """
+
+    class QueueFromStack:
+        def __init__(self):
+            self.stacks = [[], []]
+
+        def __repr__(self):
+            return str(self.stacks)
+
+        def push(self, value): # O(n)
+            if len(self.stacks[1]) > 0:
+                for _ in range(len(self.stacks[1])):
+                    self.stacks[0].append(self.stacks[1].pop())
+
+            self.stacks[0].append(value)
+
+        def pop(self):
+            if len(self.stacks[0]) > 0: # O(n)
+                for _ in range(len(self.stacks[0])):
+                    self.stacks[1].append(self.stacks[0].pop())
+
+            return self.stacks[1].pop()
+
+""" Ex: 1
+
+    Source: CTCI pg 99
+
+    Description: Implement SetOfStacks, where each stack has a fixed size limit
+
+    Questions:
+    - What functions?
+
+    """
+
+    class StackOfStacks:
+        def __init__(self, threshold):
+            self.stacks = []
+            self.threshold = threshold
+            self.total_length = 0
+
+        def __len__(self):
+            return self.total_length
+
+        def __repr__(self):
+            return str(self.stacks)
+
+        def isEmpty(self):
+            return self.total_length == 0
+
+        def push(self, value):
+            if self.total_length == 0 or len(self.stacks[len(self.stacks)-1]) == self.threshold:
+                self.stacks.append([])
+
+            self.stacks[len(self.stacks)-1].append(value)
+            self.total_length += 1
+
+        def pop(self):
+            if self.total_length == 0:
+                print("No elements in stack!")
+                return
+
+            to_return = self.stacks[len(self.stacks)-1].pop()
+            self.total_length -= 1
+
+            if len(self.stacks[len(self.stacks)-1]) == 0:
+                self.stacks.pop()
+
+        def peek(self):
+            if self.total_length == 0:
+                print("No elements in stack!")
+                return
+
+            last_stack = self.stacks[len(self.stacks)-1]
+
+            return last_stack[len(last_stack)-1]

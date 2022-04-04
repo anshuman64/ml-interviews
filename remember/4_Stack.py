@@ -1,7 +1,8 @@
-class StackNode: 
+class StackNode:
     def __init__(self, value):
         self.value = value
         self.next = None
+
 
 class SimpleStack:
     def __init__(self):
@@ -24,33 +25,34 @@ class SimpleStack:
     def isEmpty(self):
         return len(self.items) == 0
 
+
 class Stack:
     def __init__(self):
-        self.top = None 
+        self.top = None
         self.length = 0
 
     def __len__(self):
         return self.length
-    
+
     def push(self, item):
         new_node = StackNode(item)
-        
+
         if (self.top is None):
             self.top = new_node
         else:
-            new_node.next = self.top 
+            new_node.next = self.top
             self.top = new_node
-        
+
         self.length += 1
 
     def pop(self):
         assert self.length > 0, "No items in stack"
-        
-        return_node = self.top 
-        self.top = self.top.next 
+
+        return_node = self.top
+        self.top = self.top.next
         self.length -= 1
 
-        return return_node.value 
+        return return_node.value
 
     def peek(self):
         assert self.length > 0, "No items in stack"
@@ -61,7 +63,7 @@ class Stack:
 
 
 def test_stack():
-    l = Stack()
+    l = SimpleStack()
     assert len(l) == 0
 
     l.push(3)
@@ -78,8 +80,9 @@ def test_stack():
     assert l.pop() == 3
     assert len(l) == 0
 
-    l.peek()
-    l.pop() 
+    # l.peek()
+    # l.pop()
+
 
 if __name__ == '__main__':
     test_stack()

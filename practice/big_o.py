@@ -5,12 +5,15 @@ Source: CTCI pg 46
 Time:  O(N) - two independent loops
 Space: O(1)
 """
-def foo(arr : list):
+
+
+def foo(arr: list):
     for i in range(len(arr)):
         print(i)
 
     for i in range(len(arr)):
         print(j)
+
 
 """
 Tags: STUDYGUIDE
@@ -19,13 +22,16 @@ Source: CTCI pg 46
 Time:  O(N^2) - two independent loops
 Space: O(1)
 """
-def foo(arr : list):
+
+
+def foo(arr: list):
     sum = 0
     product = 1
 
     for i in range(len(arr)):
         for j in range(len(arr)):
             print(i, j)
+
 
 """
 Tags: IMPORTANT STUDYGUIDE
@@ -37,13 +43,16 @@ Time:  O(N^2)
     Average Work: Half-th iteration would be N/2*N = O(N^2)
 Space: O(1)
 """
-def foo(arr : list):
+
+
+def foo(arr: list):
     sum = 0
     product = 1
 
     for i in range(len(arr)):
         for j in range(i, len(arr)):
             print(i, j)
+
 
 """
 Tags: STUDYGUIDE
@@ -52,7 +61,9 @@ Source: CTCI pg 46
 Time:  O(AB)
 Space: O(1)
 """
-def foo(arr1 : list, arr2 : list):
+
+
+def foo(arr1: list, arr2: list):
     sum = 0
     product = 1
 
@@ -69,8 +80,10 @@ Description: Add binary tree of numbers
 Time:  O(2^N) - binary tree of depth N
 Space: O(N) - max width of tree = N
 """
-def f(n : int):
+
+
+def f(n: int):
     if (n <= 1):
         return 1
-    
+
     return f(n-1) + f(n-1)

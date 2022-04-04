@@ -1,3 +1,5 @@
+
+
 """ *Ex: 9
 
     Source: CTCI pg 95
@@ -5,7 +7,11 @@
     Description: Given a circular linked list, return the node at the beginning of the loop
 
     Approach:
-    - 
+    - Slowpointer - moves 1 at a time
+    - Fast pointer - moves 2 at at Time
+    - Determine they intersect - k elements away from start of loop
+    - Start third pointer at beginning of list
+    - When third_pointer = slow pointer, that is the beginning of loop
 
 """ Ex: 8
 
