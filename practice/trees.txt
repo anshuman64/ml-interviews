@@ -1,3 +1,124 @@
+""" Ex: 7
+    Source: CTCI pg 110
+    Description: Determine in-order successor of a node in BST
+    Time:  O(n)
+    """
+
+    def BSTSuccessor(root):
+        if root.right is not None:
+            current = root.right
+            while current.left is not None:
+                current = current.left
+            return current
+        else:
+            current = root
+
+            while current.parent is not None and current.parent.left != current:
+                current = current.parent
+
+            return current
+
+""" Ex: 6
+    Source: CTCI pg 110
+    Description: Check if binary tree is binary search tree
+    Time:  O(n)
+    Space: O(logn)
+    """
+
+    def ValidateBST(root, min=-np.Inf, max=np.Inf):
+        if root is None:
+            return True
+
+        if root.value <= min or root.value >= max:
+            return False
+
+        if not ValidateBST(root.left, min, root.value) or not ValidateBST(root.right, root.value, max):
+            return False
+
+        return True
+
+""" Ex: 5
+    Source: CTCI pg 110
+    Description: Check if binary tree is balanced
+    Time:  O(n)
+    """
+
+    def CheckBalanced(root):
+        if root.left is None and root.right is None:
+            return True
+        if root.left is None and root.right is not None:
+            return root.right.left is None and root.right.right is None
+        if root.right is None and root.left is not None:
+            return root.left.right is None and root.left.left is None
+
+        return CheckBalanced(root.left) and CheckBalanced(root.right)
+
+""" Ex: 4
+    Source: CTCI pg 109
+    Description: Create linked list of all nodes at each depth
+    Time:  O(n)
+    """
+
+    def ListOfDepths(bt):
+        queue = []
+        queue.append((bt.root, 1))
+        lists = []
+
+        while len(queue) > 0:
+            node, level = queue.pop(0)
+            if len(lists) < level:
+                lists.append([])
+            lists[level-1].append(node)
+
+            if node.left is not None:
+                queue.append((node.left, level+1))
+            if node.right is not None:
+                queue.append((node.right, level+1))
+
+""" Ex: 3
+    Source: CTCI pg 109
+    Description: Given sorted array, create binary search tree with minimal height
+    Time:  O(n)
+    """
+
+    def MinimalTree(arr):
+        if len(arr) == 0:
+            return None
+
+        idx = len(arr) // 2
+        root = tree.BinaryNode(arr[idx])
+
+        if idx > 0:
+            root.left = MinimalTree(arr[:idx])
+        if idx < len(arr)-1:
+            root.right = MinimalTree(arr[idx+1:])
+
+        return root
+
+""" Ex: 2
+    Source: CTCI pg 109
+    Description: Find route between nodes
+    Time:  O(V+E)
+    """
+
+    def RouteBetweenNodes(g, s, t):
+        q = []
+        visited = set()
+        q.add(s)
+
+        while not q.empty():
+            node = q.pop(0)
+            if node == t:
+                return True
+
+            visited.add(node)
+
+            for child in g[node]:
+                if child not in visited:
+                    q.add(child)
+
+        return False
+
 """ *Ex: 1
     Source: CTCI pg 49
     Description: Sum values of nodes in balanced binary search tree

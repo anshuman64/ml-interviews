@@ -166,22 +166,58 @@ def binarySearchHelper(arr, value, low, high):
         return True
 
 
+#################
+# Quick Select
+#################
+
+def quickSelect(arr, k):
+    left, right = 0, len(arr) - 1
+    pivot_index = len(arr)
+
+    while pivot_index != k:
+        pivot_index = quickSelectHelper(arr, left, right)
+
+        if pivot_index < k:
+            left = pivot_index
+        else:
+            right = pivot_index - 1
+
+    return arr[:k]
+
+
+def quickSelectHelper(arr, left, right):
+    pivot = arr[left + (right - left) // 2]
+
+    while left < right:
+        if arr[left] > pivot:
+            arr[left], arr[right] = arr[right], arr[left]
+            right -= 1
+        else:
+            left += 1
+
+    if arr[left] < pivot:
+        left += 1
+
+    return left
+
+
 ################
 # Testing
 ################
 
 arr = [1, 9, 3, 3, 2, 8, 6]
 # arr = [3,1,4,2,5]
-bubbleSort(arr)
-print(arr)
-selectionSort(arr)
-print(arr)
-insertionSort(arr)
-print(arr)
-mergeSort(arr)
-print(arr)
-quickSort(arr)
-print(arr)
+# bubbleSort(arr)
+# print(arr)
+# selectionSort(arr)
+# print(arr)
+# insertionSort(arr)
+# print(arr)
+# mergeSort(arr)
+# print(arr)
+# quickSort(arr)
+# print(arr)
+print(quickSelect(arr, 3))
 
 # arr = [1, 2, 3, 3, 6, 8, 9]
 # assert binarySearchRecursive(arr, 9)

@@ -1,4 +1,5 @@
 import heapq
+from queue import PriorityQueue
 import numpy as np
 
 
@@ -14,6 +15,10 @@ class GraphNode:
     def __repr__(self):
         return str(self.name)
 
+
+###############
+# DFS & BFS
+###############
 
 class Graph:
     def __init__(self):
@@ -79,6 +84,10 @@ class Graph:
                         node_queue.push(child_node)
 
 
+###############
+# Representations
+###############
+
 class GraphAdjacencyList:
     def __init__(self):
         self.adjacencies = {}
@@ -99,24 +108,33 @@ class GraphAdjacencyMatrix:
         self.adjacencies[start_vertex][end_vertex] = 1
 
 
-def dijskstras(graph):
+###############
+# Dijsktras
+###############
+
+def dijskstras(graph, start_vertex):
+    # O(V+ElogE)
     # Source: https://bradfieldcs.com/algos/graphs/dijkstras-algorithm/
     # Source: https://stackoverflow.com/questions/9255620/why-does-dijkstras-algorithm-use-decrease-key
 
     N = len(graph)
     # Initialize best distances to each vertex as inf
-    distances = [np.Inf] * N
+    distances = {vertex: np.Inf for vertex in graph}
     # Initialize best path previous vertex to each vertex as None
-    previous = [-1] * N
+    previous = {vertex: None for vertex in graph}
 
     # Initialize start vertex best distance as 0
-    distances[0] = 0
-    # Initialize priority queue with all distances
-    priority_queue = [[distances[i], i] for i in range(N)]
+    distances[start_vertex] = 0
+    # Initialize priority queue with start_vertex
+    priority_queue = [(0, start_vertex)]
 
     while len(priority_queue) > 0:
         # Pop lowest distance vertex in priority queue
         current_distance, current_vertex = heapq.heappop(priority_queue)
+
+        # Only consider vertex if it hasn't been visited before
+        if current_distance > distances[current_vertex]:
+            continue
 
         # For each edge from vertex
         for neighbor, weight in graph[current_vertex]:
@@ -130,14 +148,42 @@ def dijskstras(graph):
                 # Update previous vertex
                 previous[neighbor] = current_vertex
 
-                # Decrease key of neighbor
-                # Implemented in O(N) runtime, not O(logN)
-                for i in range(len(priority_queue)):
-                    if priority_queue[i][1] == neighbor:
-                        priority_queue[i][0] = distance
+                # Add to priority queue
+                heapq.heappush(priority_queue, (distance, neighbor))
 
     return distances, previous
 
+
+###############
+# DFS & BFS
+###############
+
+def topologicalSort(graph):
+    visited = [False]*len(graph)
+    order = []
+
+    for i in range(len(graph)):
+        if visited[i] == False:
+            topologicalSortHelper(i, visited, order, graph)
+
+    return order[::-1]
+
+
+def topologicalSortHelper(v, visited, order, graph):
+    visited[v] = True
+
+    # Recurse for all the vertices adjacent to this vertex
+    for i in graph[v]:
+        if visited[i] == False:
+            topologicalSortHelper(i, visited, order, graph)
+
+    # Push current vertex to order which stores result
+    order.append(v)
+
+
+###############
+# Main
+###############
 
 def test_graph():
     g = Graph()

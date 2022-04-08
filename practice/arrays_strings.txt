@@ -1,3 +1,62 @@
+""" Ex: 16
+    Source: CTCI pg 150
+    Description: Sort an array of strings such that anagrams are next to each other
+    Time:  O(n(slogs))
+
+    Example: ['friend', 'listen', 'fired', 'silent'] -> ['friend', 'fired', 'listen', 'silent']
+    """
+
+    def GroupAnagrams(strings):
+        groups = {}
+
+        for string in strings:
+            sorted_string = ''.join(sorted(string)) # O(slogs)
+            if sorted_string not in groups:
+                groups[sorted_string] = []
+            groups[sorted_string].append(string)
+
+        sorted_list = []
+        for group in groups: # O(n)
+            sorted_list.extend(groups[group])
+
+        return sorted_list
+
+""" Ex: 15
+    Source: CTCI pg 149
+    Description: Given two sorted arrays, merge B into A
+    Time:  O(A+B)
+    """
+
+    def SortedMerge(A, B):
+        a = len(A)-1
+        b = len(B)-1
+        c = len(A)-1
+
+        # Determine first element not None
+        for ele in A[::-1]:
+            if ele is not None:
+                break
+
+            a -= 1
+
+        # Fill A backwards
+        while c >= 0 and b >= 0 and a >= 0:
+            if B[b] > A[a]:
+                A[c] = B[b]
+                b -= 1
+            else:
+                A[c] = A[a]
+                a -= 1
+
+            c -= 1
+
+        # Fill remaining elements of B
+        while b >= 0:
+            A[c] = B[b]
+            b -= 1
+
+        return A
+
 """Ex: 14
     Source: TBP Mock Interview (Caroline)
 
@@ -44,20 +103,20 @@
             # Create a list of non_repeated
             non_repeated = []
             for c in m: # O(n)
-            if m[c] < 2:
-                # Add chars that are not repeated
-                non_repeated.append(c)
+                if m[c] < 2:
+                    # Add chars that are not repeated
+                    non_repeated.append(c)
                 
             # If there were no non_repeated chars
             if len(non_repeated) == 0:
-            # Return -1
-            return -1
+                # Return -1
+                return -1
             else:
-            # Find the lowest idx 
-            lowest_idx = len(s)
+                # Find the lowest idx 
+                lowest_idx = len(s)
                 for c in non_repeated: # O(n)
-                if idx_m[c] < lowest_idx:
-                lowest_idx = idx_m[c]
+                    if idx_m[c] < lowest_idx:
+                        lowest_idx = idx_m[c]
             
             return s[lowest_idx]
 
@@ -66,7 +125,7 @@
 
     Description:
         Sometimes the path isn’t the most simple for instance: 
-        If we are at directory: root/dirA/dirB and we run cd ../dirC///../.. That is the same at running cd ../..
+        If we are at directory: root/dirA/dirB and we run cd ../dirC///../.. That is the same at running cd ../dirC
 
         Assuming a path is valid, write it in the most simplified form
         Clarification:
@@ -190,11 +249,7 @@
         if len(string1) != len(string2):
             return False
         
-        string1 = string1 + string1
-        if string2 in string1:
-            return True
-
-        return False
+        return string2 in return
 
     # STUPID
     def is_rotation_helper(string1, string2, i, j, N):
@@ -541,7 +596,7 @@
                 i -= 1
                 j -= 1
 
-        return string
+        return ''.join(string)
 
 """ Ex: 4
     Source: CTCI Practice 1.2
@@ -628,7 +683,7 @@
         
         return True
 
-""" Ex: 2
+""" *Ex: 2
     Tags: STUDYGUIDE
     Source: CTCI pg 51
     Description: Print all permutations of string
