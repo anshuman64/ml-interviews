@@ -1,33 +1,37 @@
 import numpy as np
-tree = __import__('7_Tree')
 
-""" Ex: 
-    Source: CTCI pg 150
-    Description: Given sorted array that has been rotated, find idx of ele
-    Time:  
+dataset = np.array([
+    [1.465489372, 2.362125076, 0],
+    [3.396561688, 4.400293529, 0],
+    [1.38807019, 1.850220317, 0],
+    [3.06407232, 3.005305973, 0],
+    [7.627531214, 2.759262235, 1],
+    [5.332441248, 2.088626775, 1],
+    [6.922596716, 1.77106367, 1],
+    [8.675418651, -0.242068655, 1],
+    [7.673756466, 3.508563011, 1]])
 
-    Example: [7,9,10,1,3,4], 3 -> 4
-    """
-
-
-def GroupAnagrams(strings):
-    groups = {}
-
-    for string in strings:
-        sorted_string = ''.join(sorted(string))  # O(slogs)
-        if sorted_string not in groups:
-            groups[sorted_string] = []
-        groups[sorted_string].append(string)
-
-    sorted_list = []
-    for group in groups:  # O(n)
-        sorted_list.extend(groups[group])
-
-    return sorted_list
+x = dataset[:, :2]
+y = dataset[:, -1]
 
 
-# A = [1, 3, 5, 7, None, None, None]
-# B = [2, 4, 6]
-# print(SortedMerge(A, B))
+def euclidean_dist(x1, x2):
+    return np.sqrt(((x1-x2)**2).sum())
 
-print(GroupAnagrams(['friend', 'listen', 'firend', 'silent']))
+
+def get_k_neighbors(x, test_point, k):
+    # Calculate euclidean distance for each point
+    distances = map(lambda x: euclidean_dist(x, test_point), x)
+
+    # Return the indices to k smallest distances
+    return np.argsort(distances)[:k]
+
+
+def knn_classification(x, y, test_point, k):
+    neighbor_indices = get_k_neighbors(x, test_point, k)
+
+    return round(y[neighbor_indices].mean())
+
+
+test_point = [2.7810836, 2.550537003]  # 0
+print(knn_classification(x, y, test_point, 3))

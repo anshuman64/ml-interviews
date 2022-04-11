@@ -1,18 +1,24 @@
 queue = __import__('5_Queue')
 
+################
+# Binary Tree
+################
+
+
 class BinaryNode:
     def __init__(self, value):
         self.value = value
-        self.left = None 
+        self.left = None
         self.right = None
 
     def __repr__(self):
         return str(self.value)
 
+
 class BinaryTree:
     def __init__(self):
-        self.root = None 
-    
+        self.root = None
+
     def inOrderTraversal(self, current_node):
         if (current_node is not None):
             self.inOrderTraversal(current_node.left)
@@ -24,7 +30,7 @@ class BinaryTree:
             print(current_node)
             self.preOrderTraversal(current_node.left)
             self.preOrderTraversal(current_node.right)
-    
+
     def postOrderTraversal(self, current_node):
         if (current_node is not None):
             self.postOrderTraversal(current_node.left)
@@ -43,7 +49,11 @@ class BinaryTree:
                 node_queue.push(current_node.left)
             if current_node.right:
                 node_queue.push(current_node.right)
-                
+
+
+#######################
+# Binary Search Tree
+#######################
 
 class BinarySearchTree(BinaryTree):
     def find(self, value):
@@ -52,35 +62,35 @@ class BinarySearchTree(BinaryTree):
         while (current_node is not None):
             if value == current_node.value:
                 return True
-            
+
             if value <= current_node.value:
                 current_node = current_node.left
             else:
                 current_node = current_node.right
-        
+
         return False
 
     def insert(self, value):
         if self.root is None:
             self.root = BinaryNode(value)
-            return 
-        
-        current_node = self.root 
+            return
+
+        current_node = self.root
 
         while (True):
             if value <= current_node.value:
                 # If left is not None, go left. Else create node
                 if current_node.left is not None:
-                    current_node = current_node.left 
+                    current_node = current_node.left
                 else:
                     current_node.left = BinaryNode(value)
-                    return 
+                    return
             else:
                 if current_node.right is not None:
-                    current_node = current_node.right 
+                    current_node = current_node.right
                 else:
                     current_node.right = BinaryNode(value)
-                    return 
+                    return
 
     def deleteNode(self, target_node, parent_node, replace_node):
         # Case A - target node is not root node
@@ -90,33 +100,33 @@ class BinarySearchTree(BinaryTree):
                 parent_node.left = replace_node
             else:
                 parent_node.right = replace_node
-        
+
         # Case B - target node is root node
         else:
             self.root = replace_node
 
     def delete(self, value):
         # Find value with two pointers, current & parent
-        parent_node = None 
-        current_node = self.root 
+        parent_node = None
+        current_node = self.root
 
         while (current_node is not None):
             if value == current_node.value:
                 break
             elif value < current_node.value:
-                parent_node = current_node 
+                parent_node = current_node
                 current_node = current_node.left
             else:
-                parent_node = current_node 
+                parent_node = current_node
                 current_node = current_node.right
-        
+
         assert current_node is not None, "Value not in tree"
 
         # Case 1 & 2 - if node is leaf or has one child
         if current_node.left is None or current_node.right is None:
             child_node = current_node.left if current_node.left is not None else current_node.right
             self.deleteNode(current_node, parent_node, child_node)
-        
+
         # Case 3 - node has two children
         else:
             # Find largest value in left sub-tree
@@ -129,11 +139,64 @@ class BinarySearchTree(BinaryTree):
 
             # Swap values with target node
             current_node.value, replace_node.value = replace_node.value, current_node.value
-            
+
             # Delete replacement node
             child_node = replace_node.left if replace_node.left is not None else replace_node.right
             self.deleteNode(replace_node, parent_node, child_node)
 
+
+################
+# Trie
+################
+
+class TrieNode:
+    def __init__(self, char):
+        self.char = char
+        self.children = {}
+        self.is_end = False
+
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode('')
+
+    def insert(self, word: str) -> None:
+        node = self.root
+
+        for char in word:
+            if char in node.children:
+                node = node.children[char]
+            else:
+                new_node = TrieNode(char)
+                node.children[char] = new_node
+                node = new_node
+
+        node.is_end = True
+
+    def search(self, word: str) -> bool:
+        node = self.root
+
+        for char in word:
+            if char not in node.children:
+                return False
+            node = node.children[char]
+
+        return node.is_end
+
+    def startsWith(self, prefix: str) -> bool:
+        node = self.root
+
+        for char in prefix:
+            if char not in node.children:
+                return False
+            node = node.children[char]
+
+        return True
+
+
+################
+# Main
+################
 
 def test_bst():
     bst = BinarySearchTree()
@@ -155,6 +218,7 @@ def test_bst():
     # bst.delete(10)
     bst.levelOrderTraversal(bst.root)
     # bst.delete(10)
+
 
 if __name__ == '__main__':
     test_bst()

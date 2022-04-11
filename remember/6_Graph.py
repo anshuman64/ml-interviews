@@ -46,42 +46,38 @@ class Graph:
         dfsHelper(root_node)
 
     def depthFirstTraversal(self, root_node):
-        node_stack = stack.Stack()
+        node_stack = []
         visited = set()
-        node_stack.push(root_node)
+
+        node_stack.append(root_node)
+        visited.add(root_node)
 
         while (not node_stack.isEmpty()):
-            # Pop node and check if visited
             current_node = node_stack.pop()
+            print(current_node)
 
-            if current_node not in visited:
-                # Visit node
-                print(current_node)
-                visited.add(current_node)
-
-                # Add unvisited children
-                for child_node in current_node.children:
-                    if child_node not in visited:
-                        node_stack.push(child_node)
+            # Add unvisited children
+            for child_node in current_node.children:
+                if child_node not in visited:
+                    node_stack.push(child_node)
+                    visited.add(child_node)
 
     def breadthFirstTraversal(self, root_node):
-        node_queue = queue.Queue()
+        node_queue = []
         visited = set()
-        node_queue.push(root_node)
+
+        node_queue.append(root_node)
+        visited.add(root_node)
 
         while (not node_queue.isEmpty()):
-            # Pop node and check if visited
-            current_node = node_queue.pop()
+            current_node = node_queue.pop(0)
+            print(current_node)
 
-            if current_node not in visited:
-                # Visit node
-                print(current_node)
-                visited.add(current_node)
-
-                # Add unvisited children
-                for child_node in current_node.children:
-                    if child_node not in visited:
-                        node_queue.push(child_node)
+            # Add unvisited children
+            for child_node in current_node.children:
+                if child_node not in visited:
+                    node_queue.append(child_node)
+                    visited.add(child_node)
 
 
 ###############
@@ -154,31 +150,30 @@ def dijskstras(graph, start_vertex):
     return distances, previous
 
 
-###############
-# DFS & BFS
-###############
+####################
+# Topological Sort
+####################
 
 def topologicalSort(graph):
     visited = [False]*len(graph)
-    order = []
+    degree = [len(graph[v]) for v in graph]
+    to_return = []
+
+    def topologicalSortHelper(v):
+        visited[v] = True
+
+        for i in graph[v]:
+            degree[i] -= 1
+            if visited[i] == False and degree[i] == 0:
+                topologicalSortHelper(i)
+
+        to_return.append(v)
 
     for i in range(len(graph)):
-        if visited[i] == False:
-            topologicalSortHelper(i, visited, order, graph)
+        if visited[i] == False and degree[i] == 0:
+            topologicalSortHelper(i)
 
-    return order[::-1]
-
-
-def topologicalSortHelper(v, visited, order, graph):
-    visited[v] = True
-
-    # Recurse for all the vertices adjacent to this vertex
-    for i in graph[v]:
-        if visited[i] == False:
-            topologicalSortHelper(i, visited, order, graph)
-
-    # Push current vertex to order which stores result
-    order.append(v)
+    return to_return[::-1]
 
 
 ###############

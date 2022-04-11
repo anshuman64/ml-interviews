@@ -135,7 +135,7 @@ def binarySearch(arr, value):
     low = 0
     high = len(arr) - 1
 
-    while(low <= high):
+    while low <= high:
         # Avoid overflow
         mid = low + (high - low) // 2
 
