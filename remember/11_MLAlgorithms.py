@@ -35,6 +35,7 @@ def get_k_neighbors(x, test_point, k):
 def knn_classification(x, y, test_point, k):
     neighbor_indices = get_k_neighbors(x, test_point, k)
 
+    # Return rounded mean of y neighbors
     return round(y[neighbor_indices].mean())
 
 
@@ -43,7 +44,7 @@ print(knn_classification(x, y, test_point, 3))
 
 
 ########################
-# k-Nearest Neighbors
+# k-Means
 ########################
 
 def kmeans(x, k, no_of_iterations):
@@ -59,13 +60,11 @@ def kmeans(x, k, no_of_iterations):
 
     # Repeat for set # of iterations
     for _ in range(no_of_iterations):
-        centroids = []
-        for idx in range(k):
-            # Updating centroids as mean of cluster
-            cluster_mean = x[assignments == idx].mean(axis=0)
-            centroids.append(cluster_mean)
+        # Updating centroids as mean of cluster
+        centroids = [x[assignments == i].mean(0) for i in range(k)]
         centroids = np.vstack(centroids)
 
+        # Find distances & assign
         distances = cdist(x, centroids, 'euclidean')
         assignments = np.array(map(np.argmin, distances))
 
@@ -85,8 +84,8 @@ T = data.copy()[:, 0]
 X = data.copy()[:, 1:]
 
 # Normalize data
-X = X - np.average(X, axis=0)
-X = X / np.std(X, axis=0)
+X = X - X.mean(0)
+X = X / X.std(0)
 
 # Add column of ones
 X = np.hstack((np.ones(X.shape[0]).reshape(-1, 1), X))
@@ -130,8 +129,8 @@ T = data.copy()[:, 0]
 X = data.copy()[:, 1:]
 
 # Normalize data
-X = X - np.average(X, axis=0)
-X = X / np.std(X, axis=0)
+X = X - X.mean(0)
+X = X / X.std(0)
 
 # Add column of ones
 X = np.hstack((np.ones(X.shape[0]).reshape(-1, 1), X))
@@ -150,7 +149,7 @@ def Sigmoid(z):
     return 1.0/(1.0 + np.exp(-1.0 * z))
 
 
-def LogLoss(T, Y):
+def LogisticLoss(T, Y):
     return -np.mean(T*(np.log(Y)) - (1-T)*np.log(1-Y))
 
 
@@ -160,7 +159,7 @@ for m in range(n_epoch):
     preds = np.array([1 if Y[i] > 0.5 else 0 for i in range(len(Y))])
 
     # Report metrics
-    losses[m] = LogLoss(T, Y)
+    losses[m] = LogisticLoss(T, Y)
 
     # Backward pass
     delta = Y - T
@@ -211,7 +210,6 @@ class MultilayerPerceptron():
 
         for i in range(self.n_iterations):
             ### Forward Pass ###
-
             # Hidden Layer
             hidden_input = np.dot(self.W, X)
             Z = Relu(hidden_input)
@@ -220,15 +218,14 @@ class MultilayerPerceptron():
             Y = Softmax(np.dot(self.V, Z))
 
             ### Backward Pass ###
-
             # Output Layer
-            # normalize delta by +1/(n_classes * n_examples)
+            # normalize delta by 1 / (n_classes * n_examples)
             delta = (T - Y) / (Y.shape[0] * Y.shape[1])
             d_v = np.dot(Z.T, delta)
-            d_z = np.dot(delta, self.V.T)
+            d_z = np.dot(self.V.T, delta)
 
             # Hidden Layer
-            delta = d_z * GradRelu(hidden_input)  # activation
+            delta = GradRelu(hidden_input) * d_z  # activation
             d_w = np.dot(X.T, delta)
 
             ### Weight Updates ###

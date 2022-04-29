@@ -1,3 +1,6 @@
+from collections import deque
+
+
 queue = __import__('5_Queue')
 
 ################
@@ -19,11 +22,24 @@ class BinaryTree:
     def __init__(self):
         self.root = None
 
-    def inOrderTraversal(self, current_node):
+    def inOrderTraversalRecursive(self, current_node):
         if (current_node is not None):
             self.inOrderTraversal(current_node.left)
             print(current_node)
             self.inOrderTraversal(current_node.right)
+
+    def inOrderTraversal(self, current_node):
+        stack = []
+
+        while stack or current_node:
+            while current_node:
+                stack.append(current_node)
+                current_node = current_node.left
+
+            current_node = stack.pop()
+            # Process node
+
+            current_node = current_node.right
 
     def preOrderTraversal(self, current_node):
         if (current_node is not None):
@@ -38,11 +54,11 @@ class BinaryTree:
             print(current_node)
 
     def levelOrderTraversal(self, root_node):
-        node_queue = queue.Queue()
+        node_queue = deque()
         node_queue.push(root_node)
 
-        while (not node_queue.isEmpty()):
-            current_node = node_queue.pop()
+        while node_queue:
+            current_node = node_queue.popleft()
             print(current_node)
 
             if current_node.left:

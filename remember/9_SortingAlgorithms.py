@@ -60,6 +60,7 @@ def insertionSort(arr):
 ################
 
 def mergeSort(arr):
+    # Base case!
     if len(arr) == 1:
         return arr
 
@@ -171,33 +172,52 @@ def binarySearchHelper(arr, value, low, high):
 #################
 
 def quickSelect(arr, k):
-    left, right = 0, len(arr) - 1
-    pivot_index = len(arr)
+    """
+    Description: Find top K values with partial sorting
+    Runtime:
+        - Average: O(n)
+        - Worst: O(n^2) if pivot is smallest/largest element
+    """
+    # Initialize two pointers on opposite ends
+    left = 0
+    right = len(arr) - 1
+    # Initialize sorted_idx
+    sorted_idx = len(arr)
 
-    while pivot_index != k:
-        pivot_index = quickSelectHelper(arr, left, right)
+    # While we haven't sorted until k
+    while sorted_idx != k:
+        # Sort & get new sorted_idx
+        sorted_idx = quickSelectHelper(arr, left, right)
 
-        if pivot_index < k:
-            left = pivot_index
+        # If sorted_idx < k, sort the rest
+        if sorted_idx < k:
+            left = sorted_idx  # left is past the sorted
+        # Else, make sure first half properly sorted
         else:
-            right = pivot_index - 1
+            right = sorted_idx - 1  # look at only the sorted stuff
 
     return arr[:k]
 
 
 def quickSelectHelper(arr, left, right):
+    # Given: two pointers on opposite ends
+    # Find pivot as middle
     pivot = arr[left + (right - left) // 2]
 
     while left < right:
-        if arr[left] > pivot:
+        # If left >= pivot
+        if arr[left] >= pivot:
+            # Swap
             arr[left], arr[right] = arr[right], arr[left]
             right -= 1
         else:
             left += 1
 
-    if arr[left] < pivot:
+    # Ensure left is past all points lower than pivot
+    if arr[left] <= pivot:
         left += 1
 
+    # Return index we've sorted until
     return left
 
 

@@ -1,3 +1,4 @@
+from collections import deque
 import heapq
 from queue import PriorityQueue
 import numpy as np
@@ -7,28 +8,19 @@ stack = __import__('4_Stack')
 queue = __import__('5_Queue')
 
 
-class GraphNode:
-    def __init__(self, name):
-        self.name = name
-        self.children = []
-
-    def __repr__(self):
-        return str(self.name)
-
-
 ###############
 # DFS & BFS
 ###############
 
 class Graph:
     def __init__(self):
-        self.nodes = {}
+        self.children = {}
 
     def add_vertex(self, name):
-        self.nodes[name] = GraphNode(name)
+        self.children[name] = []
 
     def add_edge(self, start_vertex, end_vertex):
-        self.nodes[start_vertex].children.append(self.nodes[end_vertex])
+        self.children[start_vertex].append(end_vertex)
 
     def dfsRecursive(self, root_node):
         visited = set()
@@ -52,7 +44,7 @@ class Graph:
         node_stack.append(root_node)
         visited.add(root_node)
 
-        while (not node_stack.isEmpty()):
+        while node_stack:
             current_node = node_stack.pop()
             print(current_node)
 
@@ -63,14 +55,14 @@ class Graph:
                     visited.add(child_node)
 
     def breadthFirstTraversal(self, root_node):
-        node_queue = []
+        node_queue = deque()
         visited = set()
 
         node_queue.append(root_node)
         visited.add(root_node)
 
-        while (not node_queue.isEmpty()):
-            current_node = node_queue.pop(0)
+        while node_queue:
+            current_node = node_queue.popleft()
             print(current_node)
 
             # Add unvisited children
@@ -155,25 +147,23 @@ def dijskstras(graph, start_vertex):
 ####################
 
 def topologicalSort(graph):
-    visited = [False]*len(graph)
-    degree = [len(graph[v]) for v in graph]
+    # Initialize starting degrees
+    degree = [len(graph[v].children) for v in graph]
+    # Initialize to_return
     to_return = []
 
-    def topologicalSortHelper(v):
-        visited[v] = True
-
-        for i in graph[v]:
-            degree[i] -= 1
-            if visited[i] == False and degree[i] == 0:
-                topologicalSortHelper(i)
-
+    q = deque([v for v in degree if degree[v] == 0])
+    while q:
+        v = q.popleft()
         to_return.append(v)
 
-    for i in range(len(graph)):
-        if visited[i] == False and degree[i] == 0:
-            topologicalSortHelper(i)
+        for neighbor in graph[v]:
+            degree[neighbor] -= 1
 
-    return to_return[::-1]
+            if degree[neighbor] == 0:
+                q.append(neighbor)
+
+    return to_return
 
 
 ###############

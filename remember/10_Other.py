@@ -2,7 +2,7 @@
 # LRU Cache
 ##############
 
-from collections import OrderedDict
+from collections import Counter, OrderedDict
 
 
 class LRUCache:
@@ -25,21 +25,70 @@ class LRUCache:
             self.dict.popitem(last=False)
 
 
+################
+# Cyclic Sort
+################
+
+def CyclicSort(nums):
+    """
+    Description: sort array of numbers in range to find missing numbers
+    Runtime: O(n)
+    """
+    i = 0
+
+    # Loop through array
+    while i < len(nums):
+        # Find idx of num
+        j = nums[i] - 1
+
+        # Swap if idx exists and not equal
+        if 0 <= j < len(nums) and nums[i] != nums[j]:
+            nums[i], nums[j] = nums[j], nums[i]
+        # Else, increase i
+        else:
+            i += 1
+
+    # Find missing value
+    for i in range(len(nums)):
+        if nums[i] != i + 1:
+            return i + 1
+
+    # Edge case: missing value is last num
+    return len(nums) + 1
+
+
 ###################
 # Sliding Window
 ###################
 
 def SlidingWindow(self, s: str, t: str) -> str:
+    """
+    Description: Determine shortest subsequence eligible
+    Runtime: O(n)
+    Pseudocode:
+        l = r = ok = 0
+
+        for r in range(len(arr)):
+            if arr[r] == condition:
+                ok += 1
+
+            while l <= r and ok == condition:
+                add to return
+
+                if arr[l] == condition:
+                    ok -= 1
+
+                l += 1
+    """
     t_dict = dict(Counter(t))
     s_dict = {char: 0 for char in t_dict}
 
     ok = 0
     l = 0
-    r = 0
     to_return = s+t
 
     ### Expand ###
-    while r < len(s):
+    for r in range(len(s)):
         if s[r] in s_dict:
             s_dict[s[r]] += 1
 
@@ -48,8 +97,8 @@ def SlidingWindow(self, s: str, t: str) -> str:
 
         ### Contract ###
         while l <= r and ok == len(t_dict):
-            to_return = s[l:r+1] if len(s[l:r+1]
-                                        ) < len(to_return) else to_return
+            if len(s[l:r+1]) < len(to_return):
+                to_return = s[l:r+1]
 
             if s[l] in s_dict:
                 s_dict[s[l]] -= 1
@@ -59,31 +108,4 @@ def SlidingWindow(self, s: str, t: str) -> str:
 
             l += 1
 
-        r += 1
-
     return to_return if len(to_return) != len(s)+len(t) else ''
-
-
-################
-# Cyclic Sort
-################
-
-def CyclicSort(nums):
-    i = 0
-    n = len(nums)
-
-    while i < n:
-        j = nums[i] - 1
-
-        # Swap if idx exists
-        if 0 <= j < n and nums[i] != nums[j]:
-            nums[i], nums[j] = nums[j], nums[i]
-        else:
-            i += 1
-
-    # Find missing value
-    for i in range(n):
-        if nums[i] != i + 1:
-            return i + 1
-
-    return n + 1
