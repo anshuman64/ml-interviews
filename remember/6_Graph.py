@@ -81,7 +81,7 @@ class GraphAdjacencyList:
         self.adjacencies = {}
 
     def add_vertex(self, name):
-        self.adjacencies[name] = list()
+        self.adjacencies[name] = []
 
     def add_edge(self, start_vertex, end_vertex):
         self.adjacencies[start_vertex].append(end_vertex)
@@ -113,12 +113,12 @@ def dijskstras(graph, start_vertex):
 
     # Initialize start vertex best distance as 0
     distances[start_vertex] = 0
-    # Initialize priority queue with start_vertex
-    priority_queue = [(0, start_vertex)]
+    # Initialize heap with start_vertex
+    heap = [(0, start_vertex)]
 
-    while len(priority_queue) > 0:
-        # Pop lowest distance vertex in priority queue
-        current_distance, current_vertex = heapq.heappop(priority_queue)
+    while len(heap) > 0:
+        # Pop lowest distance vertex in heap
+        current_distance, current_vertex = heapq.heappop(heap)
 
         # Only consider vertex if it hasn't been visited before
         if current_distance > distances[current_vertex]:
@@ -136,8 +136,8 @@ def dijskstras(graph, start_vertex):
                 # Update previous vertex
                 previous[neighbor] = current_vertex
 
-                # Add to priority queue
-                heapq.heappush(priority_queue, (distance, neighbor))
+                # Add to heap
+                heapq.heappush(heap, (distance, neighbor))
 
     return distances, previous
 

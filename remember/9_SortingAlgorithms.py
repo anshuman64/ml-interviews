@@ -150,6 +150,22 @@ def binarySearch(arr, value):
     return False
 
 
+def binarySearch2(arr, value):
+    low = 0
+    high = len(arr)
+
+    while low < high:
+        # Avoid overflow
+        mid = low + (high - low) // 2
+
+        if arr[mid] < value:
+            low = mid + 1
+        else:
+            high = mid
+
+    return low
+
+
 def binarySearchRecursive(arr, value):
     return binarySearchHelper(arr, value, 0, len(arr)-1)
 

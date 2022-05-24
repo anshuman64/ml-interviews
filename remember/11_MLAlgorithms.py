@@ -1,5 +1,6 @@
 from scipy.spatial.distance import cdist
 import numpy as np
+import torch
 
 ########################
 # k-Nearest Neighbors
@@ -115,6 +116,7 @@ for m in range(n_epoch):
 
     # Batch gradient descent
     w = w - l_rate * np.dot(X.T, delta) / len(X)
+
 
 ########################
 # Logistic Regression
@@ -255,6 +257,23 @@ class LinearAE(torch.nn.Module):
 
     def encode(self, X):
         return self.encoder(X)
+
+
+# Define data loading
+def __getitem__(self, idx):
+    image_path, gt_label = self.data[idx]
+    gt_label = float(gt_label)
+
+    image = Image.open(image_path).convert("RGB")  # (H, W, C)
+    image = np.array(image)/255
+
+    image = np.transpose(image, (2, 0, 1))  # (C, H, W)
+    image = (image - 0.5) / 0.25
+
+    # Optional: implement additional image normalization
+    # Optional: implement data augmentation: random crop, rotate, flip, blur, color jitter, etc.
+
+    return image, gt_label
 
 
 # Define model, optimizer, and criterion
